@@ -15,7 +15,7 @@ avalon.audio = (function(){
 
     var context = init();
 
-    //caching is done via the browser right now
+    //caching is done via the browser right now (if you request a URL more than once - smart browsers should cache the request)
     var loadSoundFromURL = function(url, onLoad) {
         var request = new XMLHttpRequest();
         request.open('GET', url, true);
@@ -24,7 +24,7 @@ avalon.audio = (function(){
         // Decode asynchronously
         request.onload = function() {
             context.decodeAudioData(request.response, function(buffer) {
-                onLoad(buffer);
+                onLoad && onLoad(buffer);
             });
         };
         request.send();
@@ -41,9 +41,15 @@ avalon.audio = (function(){
     };
 
 
-    return {playURL:function(url){
-        loadSoundFromURL(url, playSoundBuffer);
-    }};
+    return {
+        playURL:function(url){
+            loadSoundFromURL(url, playSoundBuffer);
+        },
+        loadURL: function(url){
+            loadSoundFromURL(url);
+        }
+    };
 
 }());
+
 
