@@ -3,16 +3,20 @@
     <head>
         <title>Avalon Audio App</title>
 
+        <script type="text/js">
+
+        </script>
 
     </head>
-    <body onload="avalon.audio.loadURL('mp3/01.mp3');;">
+    <body onload="avalon.control.init();">
 
 
         <input type="button"
                value="Play Sound"
-               onclick="avalon.audio.playURL('mp3/01.mp3');"
+               onclick="avalon.control.sound_clips.ping.play();"
         />
 
         <script src="js/audio.js"></script>
+        <script src="js/control.js"></script>
     </body>
 </html>

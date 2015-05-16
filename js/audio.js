@@ -15,13 +15,11 @@ avalon.audio = (function(){
 
     var context = init();
 
-    //caching is done via the browser right now (if you request a URL more than once - smart browsers should cache the request)
     var loadSoundFromURL = function(url, onLoad) {
         var request = new XMLHttpRequest();
         request.open('GET', url, true);
         request.responseType = 'arraybuffer';
 
-        // Decode asynchronously
         request.onload = function() {
             context.decodeAudioData(request.response, function(buffer) {
                 onLoad && onLoad(buffer);
@@ -30,26 +28,45 @@ avalon.audio = (function(){
         request.send();
     };
 
-
-    var playSoundBuffer = function(buffer){
-
-        var source = context.createBufferSource(); // creates a sound source
-        source.buffer = buffer;                    // tell the source which sound to play
-        source.connect(context.destination);       // connect the source to the context's destination (the speakers)
-        source.start(0);
-
-    };
-
-
     return {
-        playURL:function(url){
-            loadSoundFromURL(url, playSoundBuffer);
+        loadURL: function(url, onload){
+            loadSoundFromURL(url, onload);
         },
-        loadURL: function(url){
-            loadSoundFromURL(url);
-        }
+        getContext: function(){
+            return context;
+        },
     };
 
 }());
+
+avalon.audio.SoundClip = (function(){
+
+    var SoundClip = function(buffer){
+        this.buffer = buffer;
+    };
+    SoundClip.prototype.play = function(){
+
+        var context = avalon.audio.getContext();
+        var source = context.createBufferSource(); // creates a sound source
+        source.buffer = this.buffer;               // tell the source which sound to play
+        source.connect(context.destination);       // connect the source to the context's destination (the speakers)
+        source.start();
+    };
+
+    return SoundClip;
+})();
+
+
+avalon.audio.PlayList = (function(){
+
+    var PlayList = function(){
+        this.sound_clips = [];
+    };
+
+    PlayList.prototype.add_sound_clip = function(sound_clip){
+        this.sound_clips.push(sound_clip);
+    };
+
+});
 
 
