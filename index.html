@@ -2,18 +2,13 @@
 <html>
     <head>
         <title>Avalon Audio App</title>
-
-        <script type="text/js">
-
-        </script>
-
     </head>
     <body onload="avalon.control.init();">
 
 
         <input type="button"
                value="Play Sound"
-               onclick="avalon.control.sound_clips.minions_of_mordred.play();"
+               onclick="avalon.control.get_sound_clip('minions_of_mordred').play();"
         />
 
         <script src="js/audio.js"></script>

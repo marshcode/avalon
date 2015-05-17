@@ -13,28 +13,30 @@ avalon.control = (function(){
         return clip;
     };
 
+    var get_sound_clip = function(name){
+        return sound_clips[name];
+    };
+
     var load_from_rules = function(rules){
-
-        for(rule_name in rules){
-            var rule = rules[rule_name];
-
-            avalon.audio.loadURL(rule.url, function(buffer){
-                var clip = add_to_clips(buffer, rule_name);
-                clip.start = rule.start;
-                clip.duration = rule.duration;
+        for(var idx=0;idx<rules.length;idx++){
+            var audio_file = rules[idx];
+            avalon.audio.loadURL(audio_file.url, function(buffer){
+                alert(audio_file.url + " loaded");
+                var clips = audio_file.clips;
+                for(var jdx=0;jdx<clips.length;jdx++){
+                    var clip = clips[jdx];
+                    var sound_clip = add_to_clips(buffer, clip.name);
+                    sound_clip.start = clip.start;
+                    sound_clip.duration = clip.duration;
+                }
             });
-
         }
-
     };
 
     var init = function(){
 
-
         var request = new XMLHttpRequest();
         request.open('GET', "rules.json", true);
-
-
 
         request.onload = function() {
             rules = JSON.parse(request.response);
@@ -46,7 +48,13 @@ avalon.control = (function(){
 
     return {
         init:init,
-        sound_clips: sound_clips
+        get_sound_clip: get_sound_clip
     };
 
 })();
+
+
+window.onerror = function(message, url, lineNumber) {
+    alert(message);
+    return true;
+};

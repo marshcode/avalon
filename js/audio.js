@@ -17,9 +17,6 @@ avalon.audio = (function(){
     var buffer_cache = {};
 
     var loadSoundFromURL = function(url, onLoad) {
-        var request = new XMLHttpRequest();
-        request.open('GET', url, true);
-        request.responseType = 'arraybuffer';
 
         var cached_buffer = buffer_cache[url];
         if(cached_buffer){
@@ -27,6 +24,11 @@ avalon.audio = (function(){
             return;
         }
 
+        //TODO: maybe check this to see if there already is a ? in the url
+        var screwy_url = url;// + "?blah=" + (new Date()).getTime();
+        var request = new XMLHttpRequest();
+        request.open('GET', screwy_url, true);
+        request.responseType = 'arraybuffer';
         request.onload = function() {
             context.decodeAudioData(request.response, function(buffer) {
                 buffer_cache[url] = buffer;
