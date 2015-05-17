@@ -17,11 +17,13 @@ avalon.control = (function(){
         return sound_clips[name];
     };
 
-    var load_from_rules = function(rules){
+    var load_from_rules = function(rules, onready){
+
+        var files_loaded = 0;
+
         for(var idx=0;idx<rules.length;idx++){
             var audio_file = rules[idx];
             avalon.audio.loadURL(audio_file.url, function(buffer){
-                alert(audio_file.url + " loaded");
                 var clips = audio_file.clips;
                 for(var jdx=0;jdx<clips.length;jdx++){
                     var clip = clips[jdx];
@@ -29,18 +31,23 @@ avalon.control = (function(){
                     sound_clip.start = clip.start;
                     sound_clip.duration = clip.duration;
                 }
+
+                files_loaded += 1;
+                if(files_loaded == rules.length){
+                    onready && onready();
+                }
             });
         }
     };
 
-    var init = function(){
+    var init = function(onready){
 
         var request = new XMLHttpRequest();
         request.open('GET', "rules.json", true);
 
         request.onload = function() {
             rules = JSON.parse(request.response);
-            load_from_rules(rules);
+            load_from_rules(rules, onready);
         };
         request.send();
 

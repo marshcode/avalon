@@ -3,7 +3,9 @@
     <head>
         <title>Avalon Audio App</title>
     </head>
-    <body onload="avalon.control.init();">
+    <body onload="avalon.control.init(function(){
+        alert('audio ready');
+    });">
 
 
         <input type="button"

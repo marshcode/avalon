@@ -24,10 +24,8 @@ avalon.audio = (function(){
             return;
         }
 
-        //TODO: maybe check this to see if there already is a ? in the url
-        var screwy_url = url;// + "?blah=" + (new Date()).getTime();
         var request = new XMLHttpRequest();
-        request.open('GET', screwy_url, true);
+        request.open('GET', url, true);
         request.responseType = 'arraybuffer';
         request.onload = function() {
             context.decodeAudioData(request.response, function(buffer) {
