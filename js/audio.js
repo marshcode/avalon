@@ -14,14 +14,22 @@ avalon.audio = (function(){
     };
 
     var context = init();
+    var buffer_cache = {};
 
     var loadSoundFromURL = function(url, onLoad) {
         var request = new XMLHttpRequest();
         request.open('GET', url, true);
         request.responseType = 'arraybuffer';
 
+        var cached_buffer = buffer_cache[url];
+        if(cached_buffer){
+            onLoad && onLoad(cached_buffer);
+            return;
+        }
+
         request.onload = function() {
             context.decodeAudioData(request.response, function(buffer) {
+                buffer_cache[url] = buffer;
                 onLoad && onLoad(buffer);
             });
         };
@@ -43,14 +51,17 @@ avalon.audio.SoundClip = (function(){
 
     var SoundClip = function(buffer){
         this.buffer = buffer;
+        this.start = 0;
+        this.duration = Number.MAX_VALUE;
     };
+
     SoundClip.prototype.play = function(){
 
         var context = avalon.audio.getContext();
         var source = context.createBufferSource(); // creates a sound source
         source.buffer = this.buffer;               // tell the source which sound to play
         source.connect(context.destination);       // connect the source to the context's destination (the speakers)
-        source.start();
+        source.start(0, this.start, this.duration);
     };
 
     return SoundClip;

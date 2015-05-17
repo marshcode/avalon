@@ -1,0 +1,12 @@
+{
+  "intro":{
+    "url":"mp3/avalon.m4a",
+    "start":0,
+    "duration":6
+  },
+  "minions_of_mordred":{
+    "url":"mp3/avalon.m4a",
+    "start":6,
+    "duration":12
+  }
+}
